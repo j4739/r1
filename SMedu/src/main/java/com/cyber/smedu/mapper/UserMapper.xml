@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.cyber.smedu.mapper.UserMapper">
+	<!-- 회원테이블 입력 -->
+	<insert id="insertUser" parameterType="com.cyber.smedu.user.domain.UserDomain">
+		INSERT INTO
+		user(
+			user_code,
+			department_code,
+			user_id,
+			user_pw,
+			user_name,
+			user_birth,
+			user_gender,
+			user_address,
+			user_phone,
+			user_email,
+			user_educational,
+			user_level,
+			user_join_date
+		) VALUES(
+			CONCAT('user_code',(SELECT COUNT(u.user_code)+1 FROM user u)),
+			#{departmentCode},
+			#{userId},
+			#{userPw},
+			#{userName},
+			#{userBirth},
+			#{userGender},
+			#{userAddress},
+			#{userPhone},
+			#{userEmail},
+			#{userEducational},
+			#{userLevel},
+			NOW()
+		)
+	</insert>
+	
+	<!-- 학생관리테이블 입력 -->
+	<insert id="insertStudent" parameterType="com.cyber.smedu.user.domain.StudentDomain">
+		INSERT INTO
+		student(
+			student_code,
+			user_code,
+			student_path,
+			student_goal
+		) VALUES (
+			CONCAT('student_code',(SELECT COUNT(s.student_code)+1 FROM student s)),
+			CONCAT('user_code',(SELECT COUNT(u.user_code) FROM user u)),
+			#{studentPath},
+			#{studentGoal}
+		)
+	</insert>
+	
+	<!-- 교수관리테이블 입력 -->
+	<insert id="insertProfessor" parameterType="com.cyber.smedu.user.domain.ProfessorDomain">
+		INSERT INTO 
+		professor(
+			professor_code, 
+			user_code, 
+			professor_bachelor, 
+			professor_master, 
+			professor_doctor, 
+			professor_career
+		) VALUES (
+			CONCAT('professor_code',(SELECT COUNT(p.professor_code)+1 FROM professor p)),
+			CONCAT('user_code',(SELECT COUNT(u.user_code) FROM user u)),
+			#{professorBachelor},
+			#{professorMaster},
+			#{professorDoctor},
+			#{professorCareer}
+		)
+	</insert>
+	
+	<!-- 플래너관리테이블 입력 -->
+	<insert id="insertPlanner" parameterType="com.cyber.smedu.user.domain.PlannerDomain">
+		INSERT INTO 
+		planner(
+			planner_code,
+			user_code,
+			planner_kakao
+		) VALUES (
+			CONCAT('planner_code',(SELECT COUNT(p.planner_code)+1 FROM planner p)),
+			CONCAT('user_code',(SELECT COUNT(u.user_code) FROM user u)),
+			#{plannerKakao}
+		)
+	</insert>
+</mapper>
